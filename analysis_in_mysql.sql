@@ -61,13 +61,49 @@ GROUP BY 1
 ORDER BY 2 DESC;
 
 -- Q13. What is the gender distribution of customers?
+SELECT gender, COUNT(customer_id)  AS gender_distribution
+FROM t1
+GROUP BY 1;
+
 -- Q14. What is the age distribution of customers?
+SELECT age, COUNT(customer_id)  AS age_distribution
+FROM t1
+GROUP BY 1
+ORDER BY 1;
+
 -- Q15. What is the average review rating across all products?
+SELECT ROUND(AVG(review_rating), 2) AS avg_review_rating
+FROM t1;
+
 -- Q16. Which products have the highest average rating?
+SELECT item_purchased, ROUND(AVG(review_rating),2) AS highest_avg_rating
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q17. Which products have the lowest average rating?
+SELECT item_purchased, ROUND(AVG(review_rating),2) AS lowest_avg_review_rating
+FROM t1
+GROUP BY 1
+ORDER BY 2 ASC;
+
 -- Q18. Which categories have the highest average rating?
+SELECT category, ROUND(AVG(review_rating),2) AS highesst_avg_review_rating
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q19. Which categories generate the most revenue?
+SELECT category, SUM(purchase_amount) AS total_revenue
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q20. Which categories generate the most orders?
+SELECT category, count(*) AS total_orders
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
 
 -- Q21. Which customers have made the highest number of purchases?
 -- Q22. Which customers have spent the most money overall (CLV)?
