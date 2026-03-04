@@ -259,10 +259,37 @@ GROUP BY customer_id, shipping_type
 ORDER BY customer_id, type_count DESC;
 
 -- Q41. Which products generate the most revenue?
+SELECT  item_purchased, SUM(purchase_amount) AS highest_revene_product
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q42. Which products generate the least revenue?
+SELECT  item_purchased, SUM(purchase_amount) AS lowest_revene_product
+FROM t1
+GROUP BY 1
+ORDER BY 2;
+
 -- Q43. Which products have the highest number of unique customers?
+SELECT item_purchased, count( DISTINCT customer_id) AS highest_unique_customers
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q44. Which products have the highest discount usage?
+SELECT item_purchased, count(discount_applied) AS highest_discount_usage
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q45. Which products have the lowest discount usage?
+SELECT item_purchased, count(discount_applied) AS lowest_discount_usage
+FROM t1
+GROUP BY 1
+ORDER BY 2;
+
+SELECT * 
+FROM T1;
 -- Q46. Which products are most popular among male customers?
 -- Q47. Which products are most popular among female customers?
 -- Q48. Which products are most popular among each age group?
