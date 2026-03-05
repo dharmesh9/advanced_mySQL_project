@@ -288,14 +288,66 @@ FROM t1
 GROUP BY 1
 ORDER BY 2;
 
-SELECT * 
-FROM T1;
 -- Q46. Which products are most popular among male customers?
+SELECT gender,item_purchased, COUNT(*) AS purchase_count
+FROM t1
+WHERE gender = 'Male'
+GROUP BY 2
+ORDER BY 3 DESC;
+
 -- Q47. Which products are most popular among female customers?
+SELECT gender,item_purchased, COUNT(*) AS purchase_count
+FROM t1
+WHERE gender = 'Female'
+GROUP BY 2
+ORDER BY 3 DESC;
+
 -- Q48. Which products are most popular among each age group?
+SELECT age_group, item_purchased, purchase_count
+FROM (
+    SELECT 
+        age_group,
+        item_purchased,
+        COUNT(*) AS purchase_count,
+        RANK() OVER (PARTITION BY age_group ORDER BY COUNT(*) DESC) AS rnk
+    FROM t1
+    GROUP BY age_group, item_purchased
+) sub
+WHERE rnk = 1;
+
 -- Q49. Which products are most popular in each location?
+SELECT location, item_purchased, purchase_count
+FROM (
+    SELECT 
+        location,
+        item_purchased,
+        COUNT(*) AS purchase_count,
+        RANK() OVER (PARTITION BY location ORDER BY COUNT(*) DESC) AS rnk
+    FROM t1
+    GROUP BY location, item_purchased
+) sub
+WHERE rnk = 1;
+
 -- Q50. Which products are most popular in each season?
+SELECT season, item_purchased, purchase_count
+FROM (
+    SELECT 
+        season,
+        item_purchased,
+        COUNT(*) AS purchase_count,
+        RANK() OVER (PARTITION BY season ORDER BY COUNT(*) DESC) AS rnk
+    FROM t1
+    GROUP BY season, item_purchased
+) sub
+WHERE rnk = 1;
+
 -- Q51. Which categories have the highest discount usage?
+SELECT category, COUNT(*) AS discount_usage
+FROM t1
+WHERE discount_applied = 'Yes'
+GROUP BY category
+ORDER BY discount_usage DESC;
+
 -- Q52. Which categories have the lowest discount usage?
 -- Q53. Which categories have the highest number of unique customers?
 -- Q54. Which categories have the highest average purchase amount?
