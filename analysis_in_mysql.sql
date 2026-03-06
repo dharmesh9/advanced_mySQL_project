@@ -435,10 +435,34 @@ GROUP BY 1
 ORDER BY 2 DESC;
 
 -- Q66. Which age groups use discounts the most?
+SELECT age_group, COUNT(*) AS discount_count
+FROM t1
+WHERE discount_applied='yes'
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q67. Do discounted orders have lower or higher average ratings?
+SELECT discount_applied, ROUND(AVG(review_rating), 2) AS avg_rating
+FROM t1
+GROUP BY 1;
+
 -- Q68. Do discounted orders have lower or higher purchase amounts?
+SELECT discount_applied, ROUND(AVG(purchase_amount), 2) AS avg_purchase
+FROM t1
+GROUP BY 1;
+
 -- Q69. Do subscribed customers spend more than unsubscribed customers?
+SELECT subscription_status, 
+       ROUND(AVG(purchase_amount), 2) AS avg_spent
+FROM t1
+GROUP BY 1;
+
 -- Q70. Do subscribed customers buy more frequently?
+SELECT subscription_status, COUNT(*) AS total_orders
+FROM t1
+GROUP BY 1
+ORDER BY 2 DESC;
+
 -- Q71. Which subscription status gives the highest ratings?
 -- Q72. Which shipping type is used the most?
 -- Q73. Which shipping type generates the most revenue?
