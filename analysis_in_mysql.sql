@@ -585,10 +585,54 @@ FROM (
 WHERE rnk <= 3;
 
 -- Q86. What is the revenue rank of each customer?
+SELECT customer_id,
+       total_revenue,
+       RANK() OVER (ORDER BY total_revenue DESC) AS revenue_rank
+FROM (
+        SELECT customer_id,
+               SUM(purchase_amount) AS total_revenue
+        FROM t1
+        GROUP BY customer_id
+     ) AS customer_revenue;
+     
 -- Q87. What is the purchase frequency rank of each customer?
+SELECT customer_id,
+       purchase_count,
+       RANK() OVER (ORDER BY purchase_count DESC) AS frequency_rank
+FROM (
+        SELECT customer_id,
+               COUNT(*) AS purchase_count
+        FROM t1
+        GROUP BY customer_id
+     ) AS customer_frequency;
+     
 -- Q88. What is the revenue rank of each product?
+SELECT item_purchased,
+       total_revenue,
+       RANK() OVER (ORDER BY total_revenue DESC) AS revenue_rank
+FROM (
+        SELECT item_purchased,
+               SUM(purchase_amount) AS total_revenue
+        FROM t1
+        GROUP BY item_purchased
+     ) AS product_revenue;
 -- Q89. What is the revenue rank of each category?
+SELECT category,
+       total_revenue,
+       RANK() OVER (ORDER BY total_revenue DESC) AS revenue_rank
+FROM (
+        SELECT category,
+               SUM(purchase_amount) AS total_revenue
+        FROM t1
+        GROUP BY category
+     ) AS category_revenue;
+     
 -- Q90. What is the average purchase amount per customer compared to the overall average?
+SELECT customer_id,
+       AVG(purchase_amount) AS customer_avg_purchase,
+       AVG(AVG(purchase_amount)) OVER () AS overall_avg_purchase
+FROM t1
+GROUP BY customer_id;
 
 -- Q91. Which product pairs are frequently bought together (self-join)?
 -- Q92. Which customers bought the same product as other customers (self-join)?
