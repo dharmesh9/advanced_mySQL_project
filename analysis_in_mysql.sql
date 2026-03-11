@@ -616,6 +616,7 @@ FROM (
         FROM t1
         GROUP BY item_purchased
      ) AS product_revenue;
+     
 -- Q89. What is the revenue rank of each category?
 SELECT category,
        total_revenue,
@@ -635,13 +636,63 @@ FROM t1
 GROUP BY customer_id;
 
 -- Q91. Which product pairs are frequently bought together (self-join)?
--- Q92. Which customers bought the same product as other customers (self-join)?
--- Q93. Which customers bought the same category as other customers (self-join)?
--- Q94. Which customers share similar buying patterns (same color/size)?
--- Q95. Which customers have overlapping purchase behavior across seasons?
+SELECT 
+    a.item_purchased AS product_1,
+    b.item_purchased AS product_2,
+    COUNT(*) AS times_bought_together
+FROM t1 a
+JOIN t1 b
+  ON a.customer_id = b.customer_id
+ AND a.item_purchased < b.item_purchased
+GROUP BY a.item_purchased, b.item_purchased
+ORDER BY times_bought_together DESC;
 
--- Q96. What is the probability of a customer using a discount based on category?
--- Q97. What is the probability of a customer giving a high rating based on product?
--- Q98. What is the probability of a customer buying again based on past frequency?
--- Q99. Which customers are most likely to churn (low frequency + low spend)?
--- Q100. Which customers are most likely to upgrade to subscription (high spend + frequent orders)?
+-- Q92. Which customers bought the same product as other customers (self-join)?
+SELECT 
+    a.customer_id AS customer_1,
+    b.customer_id AS customer_2,
+    a.item_purchased
+FROM t1 a
+JOIN t1 b
+  ON a.item_purchased = b.item_purchased
+ AND a.customer_id < b.customer_id
+ORDER BY a.item_purchased;
+
+-- Q93. Which customers bought the same category as other customers (self-join)?
+SELECT 
+    a.customer_id AS customer_1,
+    b.customer_id AS customer_2,
+    a.category
+FROM t1 a
+JOIN t1 b
+  ON a.category = b.category
+ AND a.customer_id < b.customer_id
+GROUP BY a.customer_id, b.customer_id, a.category;
+
+-- Q94. Which customers share similar buying patterns (same color/size)?
+SELECT 
+    a.customer_id AS customer_1,
+    b.customer_id AS customer_2,
+    a.color,
+    a.size,
+    COUNT(*) AS similar_purchases
+FROM t1 a
+JOIN t1 b
+  ON a.color = b.color
+ AND a.size = b.size
+ AND a.customer_id < b.customer_id
+GROUP BY a.customer_id, b.customer_id, a.color, a.size
+ORDER BY similar_purchases DESC;
+
+-- Q95. Which customers have overlapping purchase behavior across seasons?
+SELECT 
+    a.customer_id AS customer_1,
+    b.customer_id AS customer_2,
+    a.season,
+    COUNT(*) AS shared_season_purchases
+FROM t1 a
+JOIN t1 b
+  ON a.season = b.season
+ AND a.customer_id < b.customer_id
+GROUP BY a.customer_id, b.customer_id, a.season
+ORDER BY shared_season_purchases DESC;
